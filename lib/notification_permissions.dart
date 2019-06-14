@@ -5,17 +5,20 @@ import 'package:meta/meta.dart';
 
 class NotificationPermissions {
   static const MethodChannel _channel =
-  const MethodChannel('notification_permissions');
+      const MethodChannel('notification_permissions');
 
-  static Future<void> requestNotificationPermissions(
-      [NotificationSettingsIos iosSettings = const NotificationSettingsIos()]) {
-    return _channel.invokeMethod(
+  static Future<PermissionStatus> requestNotificationPermissions(
+      [NotificationSettingsIos iosSettings =
+          const NotificationSettingsIos()]) async {
+    await _channel.invokeMethod(
         'requestNotificationPermissions', iosSettings.toMap());
+
+    return getNotificationPermissionStatus();
   }
 
   static Future<PermissionStatus> getNotificationPermissionStatus() async {
     final String status =
-    await _channel.invokeMethod('getNotificationPermissionStatus');
+        await _channel.invokeMethod('getNotificationPermissionStatus');
     return _getPermissionStatus(status);
   }
 
